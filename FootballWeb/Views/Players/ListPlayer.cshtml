@@ -1,0 +1,71 @@
+﻿@using FootballWeb.PlayerAPI.ApiModel
+@model List<PlayerModel>
+@{
+    ViewData["Title"] = "Cầu thủ";
+}
+
+<div class="container py-4">
+    <h1 class="text-center mb-4">Players of @TempData["Team"]</h1>
+    <div class="row g-4">
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var player in Model)
+            {
+                @if (player.ShirtNo != 0)
+                {
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card player-card h-100 shadow-sm">
+                            <div class="card-header text-center text-dark py-3">
+                                <h5 class="card-title mb-0 p-5">@player.Name</h5>
+                            </div>
+                            <div class="player-image-container">
+                                @if (!string.IsNullOrEmpty(player.ImageUrl))
+                                {
+                                    <img src="@player.ImageUrl" class="card-img-top player-img" alt="@player.Name">
+                                }
+                                <div class="shirt-number">@player.ShirtNo</div>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <strong>Position:</strong> <span>@player.Position</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <strong>Nationality:</strong> <span>@player.Nationality</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <strong>Age:</strong> <span>@player.Age</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-footer text-center">
+                                <form asp-action="GetPlayerDetail" asp-controller="Players" method="post">
+                                    <input name="Id" value="@player.Id" type="hidden" />
+                                    <input name="Name" value="@player.Name" type="hidden" />
+                                    <input name="ShirtNo" value="@player.ShirtNo" type="hidden" />
+                                    <input name="Nationality" value="@player.Nationality" type="hidden" />
+                                    <input name="Age" value="@player.Age" type="hidden" />
+                                    <input name="DateOfBirth" value="@player.DateOfBirth" type="hidden" />
+                                    <input name="Position" value="@player.Position" type="hidden" />
+                                    <input name="Team" value="@player.Team" type="hidden" />
+                                    <input name="ImageUrl" value="@player.ImageUrl" type="hidden" />
+                                    <button type="submit" class="btn btn-primary">View Details</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <h4 class="alert-heading">No Players Found!</h4>
+                    <p>There are currently no players to display.</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

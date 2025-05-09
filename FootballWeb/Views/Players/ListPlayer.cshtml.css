@@ -1,0 +1,58 @@
+﻿.player-card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+    border: none;
+}
+
+    .player-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.4) !important;
+    }
+
+.player-image-container {
+    position: center;
+    width: 110px;
+    height: 140px;
+    overflow: hidden;
+    background-color: #ffffff;
+}
+
+.player-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.shirt-number {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(0, 123, 255, 0.9);
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #B1E1FA, #BCABF9);
+    border-bottom: none;
+    font-size: 25px;
+}
+
+.list-group-item {
+    padding: 0.75rem 1.25rem;
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+    .list-group-item:last-child {
+        border-bottom: none;
+    }

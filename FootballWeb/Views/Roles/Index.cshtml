@@ -1,0 +1,48 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model List<IdentityRole>
+
+<h3>Danh sách các vai trò trong hệ thống</h3>
+@if (TempData["Status"] != null)
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        @TempData["Status"]
+    </div>
+}
+
+<form method="get" asp-action="AddUpdate" class="my-1 d-inline">
+    <button class="btn btn-secondary" type="submit">
+        Thêm mới Role
+    </button>
+</form>
+<a class="btn btn-secondary" href="/User">Gán role cho người dùng</a>
+
+<table class="table">
+    <tr>
+        <th>Role ID</th>
+        <th>Tên</th>
+        <th>Tác vụ</th>
+    </tr>
+    @foreach (var role in @Model)
+    {
+        <tr>
+            <td>@role.Id</td>
+            <td>@role.Name</td>
+            <td>
+                <form method="get" asp-action="AddUpdate" class="d-inline">
+                    <input type="hidden" name="Id" value="@role.Id" />
+                    <input type="hidden" name="Name" value="@role.Name" />
+                    <button type="submit" class="btn btn-success btn-sm">
+                        Cập nhật Role
+                    </button>
+                </form>
+                <form method="POST" asp-action="Delete" class="d-inline">
+                    <input type="hidden" name="Id" value="@role.Id" />
+                    <button type="submit" class="btn btn-success btn-sm">
+                        Xóa Role
+                    </button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>

@@ -1,0 +1,36 @@
+﻿@model UsersModel
+@{
+    ViewData["Title"] = "Cập nhật role cho User";
+}
+
+<h4>@ViewData["Title"]</h4>
+<div class="row">
+    <div class="col-md-6">
+        <p>Chọn các role gán cho <strong>@Model.UserName</strong></p>
+        <form method="post" asp-action="UpdateRoles">
+            @if (TempData["Status"] != null)
+            {
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    @TempData["Status"]
+                </div>
+            }
+            <div class="form-group">
+                @Html.LabelFor(x => x.RoleName)
+                <select asp-for="RoleName" class="form-select">
+                    <option value="">Chọn Role</option>
+                    <option value="User">User</option>
+                    @foreach (var role in Model.Roles)
+                    {
+                        <option value="@role">@role</option>
+                    }
+                    </select>
+            </div>
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="@Model.UserName">
+            <a class="btn btn-primary" href="/User">Danh sách</a>
+            <button type="submit" class="btn btn-danger">Cập nhật</button>
+        </form>
+    </div>
+</div>

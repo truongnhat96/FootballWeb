@@ -1,0 +1,14 @@
+﻿@page
+@model ConfirmEmailModel
+@{
+    ViewData["Title"] = "Xác thực email";
+    Layout = "/Views/Shared/Admin/_LoginLayout.cshtml";
+
+}
+
+
+<div class="p-4">
+    <h1>@ViewData["Title"]</h1>
+    <p>@Model.StatusMessage</p>
+    <a class="btn btn-primary" id="login" asp-area="Identity" asp-page="/Account/Login">Đăng Nhập Ngay</a>
+</div>

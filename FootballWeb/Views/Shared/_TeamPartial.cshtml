@@ -1,0 +1,29 @@
+﻿@using FootballWeb.PlayerAPI.Service
+@using FootballWeb.Repository
+@using Microsoft.EntityFrameworkCore
+@inject IFplService _fpl
+@inject DataContext _context
+<select class="form-select" id="selectTeam" aria-label="Select Team">
+    <option selected>XEM CHI TIẾT CÁC ĐỘI BÓNG</option>
+    @{
+        var team = await _fpl.GetBootstrapAsync();
+        foreach (var item in team.teams)
+        {
+            <option value="@item.id">@item.name - @item.short_name</option>
+        }
+        var teamInDb = await _context.Teams.ToListAsync();
+        foreach (var item in teamInDb)
+        {
+            <option value="@item.Id">@item.Name - @item.ShortName</option>
+        }
+    }
+</select>
+
+<script>
+    document.getElementById('selectTeam').addEventListener('change', function () {
+        var selectedTeamId = this.value;
+        if (selectedTeamId) {
+            window.location.href = '/Player/719/' + selectedTeamId;
+        }
+    });
+</script>

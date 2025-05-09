@@ -1,0 +1,288 @@
+﻿@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Premier League Standings";
+    var standingsJson = ViewBag.Standings as string;
+    var standingsRoot = JsonDocument.Parse(standingsJson).RootElement;
+    var tableArray = standingsRoot
+        .GetProperty("standings")
+        .EnumerateArray()
+        .FirstOrDefault(s => s.GetProperty("type").GetString() == "TOTAL")
+        .GetProperty("table");
+}
+
+<style>
+    /* Global Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        font-family: 'Arial', sans-serif;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+        /* Dark Mode Styles */
+        html.dark {
+            background-color: #121212;
+            color: #e5e5e5;
+        }
+
+    /* Header */
+    .text-center {
+        text-align: center;
+    }
+
+    /* Title Styling */
+    h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #000; /* Đổi màu chữ thành đen */
+    }
+
+    /* Buttons */
+    button {
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        button.tab-button {
+            background-color: #4C6B9F;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+            button.tab-button:hover {
+                background-color: #3A5681;
+            }
+
+            button.tab-button.bg-gray-200 {
+                background-color: #e2e8f0;
+            }
+
+                button.tab-button.bg-gray-200:hover {
+                    background-color: #d1d7e3;
+                }
+
+    /* Table */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    thead {
+        background-color: #edf2f7;
+    }
+
+        thead th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+    tbody tr {
+        transition: background-color 0.3s ease;
+    }
+
+        tbody tr:hover {
+            background-color: #e5e7eb;
+        }
+
+        tbody tr.bg-green-100 {
+            background-color: #c6f6d5;
+        }
+
+        tbody tr.bg-yellow-100 {
+            background-color: #fefcbf;
+        }
+
+        tbody tr.bg-red-100 {
+            background-color: #fed7d7;
+        }
+
+    /* Table Data Cells */
+    td {
+        padding: 12px;
+        font-size: 0.875rem;
+        color: #1a202c;
+    }
+
+        td img {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+        }
+
+    /* Form Indicators */
+    span {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+
+        span.bg-green-500 {
+            background-color: #48bb78;
+        }
+
+        span.bg-gray-400 {
+            background-color: #e2e8f0;
+        }
+
+        span.bg-red-500 {
+            background-color: #f56565;
+        }
+
+    /* Mode Toggle Button */
+    button.fixed {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: 12px;
+        background-color: #5A67D8;
+        color: white;
+        border-radius: 50%;
+        transition: background-color 0.3s ease;
+    }
+
+        button.fixed:hover {
+            background-color: #4C51BF;
+        }
+
+    /* Container */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    select,
+    input {
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+    }
+
+        select:focus,
+        input:focus {
+            border-color: #5A67D8;
+            outline: none;
+        }
+
+    /* Responsive Design */
+   
+
+    table {
+        font-size: 0.75rem;
+    }
+
+    button.tab-button {
+        padding: 8px 12px;
+    }
+
+    }
+</style>
+
+<div class="transition-colors duration-500 bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
+
+
+    <!-- Header -->
+    <div class="text-center py-6 bg-indigo-700 text-white">
+        <h1 class="text-3xl font-bold">🔥 Premier League Standings</h1>
+    </div>
+
+
+    <!-- Container -->
+    <div class="max-w-5xl mx-auto mt-10 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+
+        
+
+        <!-- Dropdown Sort and Filter -->
+        <div class="mb-6 flex items-center space-x-4">
+            <select class="p-2 border rounded-md">
+                <option>Sort by Points</option>
+                <option>Sort by Wins</option>
+                <option>Sort by Goals</option>
+            </select>
+            <input type="text" class="p-2 border rounded-md" placeholder="Search for a team..." />
+        </div>
+
+        <!-- Standings Table -->
+        <h2 class="text-2xl font-semibold mb-4">📊 Bảng Xếp Hạng</h2>
+        <table class="w-full table-auto">
+            <thead>
+                <tr class="bg-gray-200 dark:bg-gray-700 text-sm font-semibold">
+                    <th class="p-3 text-left">#</th>
+                    <th class="p-3 text-left">Đội</th>
+                    <th class="p-3 text-left">Trận</th>
+                    <th class="p-3 text-left">Thắng</th>
+                    <th class="p-3 text-left">Hòa</th>
+                    <th class="p-3 text-left">Thua</th>
+                    <th class="p-3 text-left">HS</th>
+                    <th class="p-3 text-left">Điểm</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var team in tableArray.EnumerateArray())
+                {
+                    var pos = team.GetProperty("position").GetInt32();
+                    var name = team.GetProperty("team").TryGetProperty("name", out var teamName) ? teamName.GetString() : "Unknown";
+                    var crest = team.GetProperty("team").TryGetProperty("crest", out var teamCrest) ? teamCrest.GetString() : "/path/to/default-logo.png";
+                    var played = team.GetProperty("playedGames").GetInt32();
+                    var won = team.GetProperty("won").GetInt32();
+                    var draw = team.GetProperty("draw").GetInt32();
+                    var lost = team.GetProperty("lost").GetInt32();
+                    var gd = team.GetProperty("goalDifference").GetInt32();
+                    var points = team.GetProperty("points").GetInt32();
+                    var form = team.GetProperty("form").GetString();
+
+                    var rowClass = "";
+                    if (pos <= 4) rowClass = "bg-green-100"; // Top 4
+                    else if (points >= 55) rowClass = "bg-yellow-100"; // Europa League
+                    else if (points <= 30) rowClass = "bg-red-100"; // Relegation
+
+                    <tr class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition @rowClass">
+                        <td class="p-3">@pos</td>
+                        <td class="p-3">
+                            <img src="@crest" alt="@name" class="inline-block w-5 h-5 mr-2" />
+                            @name
+                        </td>
+                        <td class="p-3">@played</td>
+                        <td class="p-3">@won</td>
+                        <td class="p-3">@draw</td>
+                        <td class="p-3">@lost</td>
+                        <td class="p-3">@gd</td>
+                        <td class="p-3 font-bold">@points</td>
+                        <td>
+                            @if (form != null)
+                            {
+                                @foreach (var result in form.Split(','))
+                                {
+                                    <span class="inline-block w-3 h-3 rounded-full mr-1 @(
+                                           result.Trim() == "W" ? "bg-green-500" :
+                                             result.Trim() == "D" ? "bg-gray-400" :
+                                              "bg-red-500")"></span>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

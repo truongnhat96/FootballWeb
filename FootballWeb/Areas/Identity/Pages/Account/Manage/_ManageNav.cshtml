@@ -1,0 +1,131 @@
+﻿@inject SignInManager<IdentityUser> SignInManager
+@{
+    var auth = true; //User.IsInRole("Admin") || User.IsInRole("Manager");
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+@if (auth)
+{
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center"
+        asp-action="Index" asp-controller="Home" asp-area="">
+            <div class="sidebar-brand-icon rotate-n-15">
+                <i class="fas fa-laugh-wink"></i>
+            </div>
+            <div class="sidebar-brand-text mx-3">Admin Page</div>
+        </a>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+
+        <!-- Heading -->
+        <div class="sidebar-heading mt-2">
+            Thông tin cá nhân & Quyền
+        </div>
+
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUserManage" aria-expanded="true" aria-controls="collapseUserManage">
+                <i class="fas fa-fw fa-cog"></i>
+                <span>Tài khoản cá nhân</span>
+            </a>
+            <div id="collapseUserManage" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Chức năng</h6>
+                    <a class="collapse-item @ManageNavPages.IndexNavClass(ViewContext)" asp-area="Identity" asp-page="/Account/Manage/Index">Hồ sơ</a>
+                    <a class="collapse-item @ManageNavPages.EmailNavClass(ViewContext)" asp-area="Identity" asp-page="/Account/Manage/Email">Email</a>
+                    <a class="collapse-item @ManageNavPages.ChangePasswordNavClass(ViewContext)" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">Mật khẩu</a>
+                    @if (hasExternalLogins)
+                    {
+                        <a class="collapse-item @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-area="Identity" asp-page="/Account/Manage/ExternalLogins">Tài khoản đã liên kết</a>
+                    }
+                    <a class="collapse-item @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" asp-area="Identity" asp-page="/Account/Manage/TwoFactorAuthentication">Xác thực 2 yếu tố</a>
+                    <a class="collapse-item @ManageNavPages.PersonalDataNavClass(ViewContext)" asp-area="Identity" asp-page="/Account/Manage/PersonalData">Dữ liệu người dùng</a>
+                </div>
+            </div>
+        </li>
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePhanquyen" aria-expanded="true" aria-controls="collapsePhanquyen">
+                <i class="fas fa-user-cog"></i>
+                <span>Phân quyền</span>
+            </a>
+            <div id="collapsePhanquyen" class="collapse" aria-labelledby="headingPhanquyen" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" asp-action="Index" asp-controller="Roles">Vai trò - Role</a>
+                    <a class="collapse-item" asp-action="UserView" asp-controller="Roles">Gán vai trò (phân quyền)</a>
+                </div>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAds" aria-expanded="true" aria-controls="collapseAds">
+                <i class="fas fa-ad"></i>
+                <span>Quảng cáo</span>
+            </a>
+            <div id="collapseAds" class="collapse" aria-labelledby="headingAds" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" asp-action="Pending" asp-controller="Advertisement">Danh sách</a>
+                </div>
+            </div>
+        </li>
+
+
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
+
+        <!-- Heading -->
+        <div class="sidebar-heading mt-2">
+            Đội bóng & Cầu thủ
+        </div>
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTeams" aria-expanded="true" aria-controls="collapseTwo">
+                <i class="fa-solid fa-people-group"></i>
+                <span>Quản lý đội bóng</span>
+            </a>
+            <div id="collapseTeams" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" asp-controller="Teams" asp-action="TeamList"><i class="fas fa-list"></i> Danh sách đội bóng</a>
+                </div>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePlayers" aria-expanded="true" aria-controls="collapseTwo">
+                <i class="fa-solid fa-user-plus"></i>
+                <span>Quản lý cầu thủ</span>
+            </a>
+            <div id="collapsePlayers" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" asp-controller="Players" asp-action="PlayersManage"><i class="fas fa-list"></i> Danh sách cầu thủ</a>
+                </div>
+            </div>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-lg-block">
+
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-lg-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+    </ul>
+    <!-- End of Sidebar -->
+
+}
+else
+{
+    <ul class="nav nav-pills flex-column">
+        <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Hồ sơ</a></li>
+        <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
+        <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Mật khẩu</a></li>
+        @if (hasExternalLogins)
+        {
+            <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">Dịch vụ liên kết</a></li>
+        }
+        <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Xác thực 2 yếu tố</a></li>
+        <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Dữ liệu cá nhân</a></li>
+    </ul>
+}

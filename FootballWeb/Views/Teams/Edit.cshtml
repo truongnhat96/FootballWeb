@@ -1,0 +1,88 @@
+﻿@using FootballWeb.PlayerAPI.ApiModel
+@model FplTeam?
+@{
+    ViewData["Title"] = Model?.id > 0 ? "Edit Team" : "Create Team";
+}
+
+<div class="container">
+    <h2 class="mb-4">@ViewData["Title"]</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            @TempData["Message"]
+        </div>
+    }
+
+    <div class="card shadow">
+        <div class="card-body">
+            <form asp-action="Edit" method="post">
+                @if (Model?.id > 0)
+                {
+                    <input type="hidden" asp-for="id" />
+                }
+
+                <div class="mb-3">
+                    <label asp-for="name" class="form-label">Team Name</label>
+                    <input asp-for="name" class="form-control" />
+                    <span asp-validation-for="name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="short_name" class="form-label">Short Name</label>
+                    <input asp-for="short_name" class="form-control" />
+                    <span asp-validation-for="short_name" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <div>
+                        <a asp-action="TeamList" class="btn btn-secondary">Back to List</a>
+                    </div>
+                    <div>
+                        @if (Model?.id > 0)
+                        {
+                            <button type="submit" class="btn btn-primary me-2">Cập nhật đội</button>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                Xóa đội
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-success">Tạo mới</button>
+                        }
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@if (Model?.id > 0)
+{
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn xóa "@Model.name" ?</p>
+                    <p class="text-danger">Không thể hoàn tác hành động này.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <form asp-action="Delete" asp-route-id="@Model.id" method="post">
+                        <button type="submit" class="btn btn-danger">Xác nhận</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

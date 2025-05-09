@@ -1,0 +1,155 @@
+﻿@using FootballWeb.PlayerAPI.ApiModel
+@model PlayerResponseModel
+@{
+    ViewData["Title"] = $"{Model.Player?.Name} - Player Profile";
+    var stats = Model.Stats;
+}
+
+<div class="container my-5">
+    <!-- Player Header with Photo -->
+    <div class="card mb-4 shadow">
+        <div class="card-header bg-primary text-white">
+            <h1 class="display-4">
+                @Model.Player?.Name
+            </h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    @if (!string.IsNullOrEmpty(Model.Player?.ImageUrl))
+                    {
+                        <img src="@Model.Player.ImageUrl" alt="@Model.Player.Name" 
+                             class="img-fluid rounded shadow-sm" style="max-height: 300px;">
+                    }
+                    else
+                    {
+                        <img src="/images/default-player.png" alt="Default player image" 
+                             class="img-fluid rounded shadow-sm" style="max-height: 300px;">
+                    }
+                </div>
+                <div class="col-md-8">
+                    <div class="alert alert-info">
+                        <p class="lead mb-0">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            @Model.Player?.Name is currently playing as a @Model.Player?.Position
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Basic Player Information -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow">
+                <div class="card-header bg-secondary text-white">
+                    <h3><i class="bi bi-person-badge me-2"></i>Personal Information</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Full Name:</strong>
+                            <span>@Model.Player?.Name</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Date of Birth:</strong>
+                            <span>@Model.Player?.DateOfBirth</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Age:</strong>
+                            <span>@Model.Player?.Age</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Nationality:</strong>
+                            <span>@Model.Player?.Nationality</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Team:</strong>
+                            <span>@Model.Player?.Team</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Position:</strong>
+                            <span class="badge bg-primary rounded-pill">@Model.Player?.Position</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Shirt Number:</strong>
+                            <span class="badge bg-dark rounded-pill">@Model.Player?.ShirtNo</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Player Statistics -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow">
+                <div class="card-header bg-success text-white">
+                    <h3><i class="bi bi-graph-up me-2"></i>Performance Statistics</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3 bg-light">
+                                <div class="card-body text-center">
+                                    <h2 class="display-4 text-primary">@stats?.GoalsScored</h2>
+                                    <p class="lead">Goals Scored</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3 bg-light">
+                                <div class="card-body text-center">
+                                    <h2 class="display-4 text-primary">@stats?.Assists</h2>
+                                    <p class="lead">Assists</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Statistic</th>
+                                <th class="text-end">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Matches Played</td>
+                                <td class="text-end">@Model.Appearances</td>
+                            </tr>
+                            <tr>
+                                <td>Minutes Played</td>
+                                <td class="text-end">@stats?.Minutes</td>
+                            </tr>
+                            <tr>
+                                <td>GoalsConceded</td>
+                                <td class="text-end">@stats?.GoalsConceded</td>
+                            </tr>
+                            <tr>
+                                <td>Yellow Cards</td>
+                                <td class="text-end">@stats?.YellowCards</td>
+                            </tr>
+                            <tr>
+                                <td>Red Cards</td>
+                                <td class="text-end">@stats?.RedCards</td>
+                            </tr>
+                            <tr>
+                                <td>PenaltiesSaved (GK)</td>
+                                <td class="text-end">@stats?.PenaltiesSaved</td>
+                            </tr>
+                            <tr>
+                                <td>Saves</td>
+                                <td class="text-end">@stats?.Saves</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer text-muted">
+                    <small>Statistics last updated: @DateTime.UtcNow</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,236 @@
+﻿@using FootballWeb.PlayerAPI.ApiModel
+@model PlayerResponseModel
+@{
+    Layout = "/Views/Shared/Manage/_AdminLayout.cshtml";
+    var title = Model?.Player?.Id > 0 ? "Chỉnh sửa thông tin cầu thủ" : "Thêm cầu thủ mới";
+    ViewData["Title"] = title;
+}
+
+<div class="container-fluid">
+    <h2 class="mb-4">@title</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            @TempData["Message"]
+        </div>
+    }
+
+    <form method="post" enctype="multipart/form-data">
+        @if (Model?.Player?.Id > 0)
+        {
+            <input type="hidden" asp-for="Player.Id" />
+        }
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Player Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Player.Name" class="form-label">Name</label>
+                        <input asp-for="Player.Name" class="form-control" required />
+                        <span asp-validation-for="Player.Name" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Player.Position" class="form-label">Position</label>
+                        <input asp-for="Player.Position" class="form-control" required />
+                        <span asp-validation-for="Player.Position" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Player.ShirtNo" class="form-label">Shirt Number</label>
+                        <input asp-for="Player.ShirtNo" class="form-control" type="number" min="1" required />
+                        <span asp-validation-for="Player.ShirtNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Player.Nationality" class="form-label">Nationality</label>
+                        <input asp-for="Player.Nationality" class="form-control" required />
+                        <span asp-validation-for="Player.Nationality" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Player.DateOfBirth" class="form-label">Date of Birth</label>
+                        <input asp-for="Player.DateOfBirth" class="form-control" type="date" required />
+                        <span asp-validation-for="Player.DateOfBirth" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Player.Age" class="form-label">Age</label>
+                        <input asp-for="Player.Age" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="Player.Age" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Player.Team" class="form-label">Team</label>
+                        <select asp-for="Player.Team" class="form-select" required>
+                            <option value="">Chọn đội</option>
+                            @foreach (var team in Model?.Teams!)
+                            {
+                                if (Model?.Player?.Team == team.Name)
+                                {
+                                    <option value="@team.Id.ToString()" selected>@team.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@team.Id.ToString()">@team.Name</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="Player.Team" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Player Image</label>
+                        <input type="file" asp-for="Player.ImageFile" class="form-control" />
+                        @if (!string.IsNullOrEmpty(Model?.Player?.ImageUrl))
+                        {
+                            <div class="mt-2">
+                                <img src="@Model.Player.ImageUrl" class="img-thumbnail" style="max-height: 100px" />
+                            </div>
+                            <input type="hidden" asp-for="Player.ImageUrl" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Player Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Appearances" class="form-label">Appearances</label>
+                        <input asp-for="Appearances" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="Appearances" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Stats.Minutes" class="form-label">Minutes</label>
+                        <input asp-for="Stats.Minutes" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="Stats.Minutes" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Stats.Value" class="form-label">Value (Milion £)</label>
+                        <input asp-for="Stats.Value" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="Stats.Value" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Stats.GoalsScored" class="form-label">Goals Scored</label>
+                        <input asp-for="Stats.GoalsScored" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="Stats.GoalsScored" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Stats.GoalsConceded" class="form-label">Goals Conceded</label>
+                        <input asp-for="Stats.GoalsConceded" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="Stats.GoalsConceded" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Stats.Assists" class="form-label">Assists</label>
+                        <input asp-for="Stats.Assists" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="Stats.Assists" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Stats.YellowCards" class="form-label">Yellow Cards</label>
+                        <input asp-for="Stats.YellowCards" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="Stats.YellowCards" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Stats.RedCards" class="form-label">Red Cards</label>
+                        <input asp-for="Stats.RedCards" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="Stats.RedCards" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Stats.OwnGoals" class="form-label">Own Goals</label>
+                        <input asp-for="Stats.OwnGoals" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="Stats.OwnGoals" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Stats.Saves" class="form-label">Saves</label>
+                        <input asp-for="Stats.Saves" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="Stats.Saves" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Stats.CleanSheets" class="form-label">Clean Sheets</label>
+                        <input asp-for="Stats.CleanSheets" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="Stats.CleanSheets" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Stats.PenaltiesSaved" class="form-label">Penalties Saved</label>
+                        <input asp-for="Stats.PenaltiesSaved" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="Stats.PenaltiesSaved" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Stats.PenaltiesMissed" class="form-label">Penalties Missed</label>
+                        <input asp-for="Stats.PenaltiesMissed" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="Stats.PenaltiesMissed" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Stats.TotalPoints" class="form-label">Total Points</label>
+                        <input asp-for="Stats.TotalPoints" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="Stats.TotalPoints" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 mb-5">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i> Lưu Thay đổi
+            </button>
+            @if (Model?.Player?.Id > 0)
+            {
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <i class="bi bi-trash"></i> Xóa cầu thủ
+                </button>
+            }
+            <a href="/Player/List" class="btn btn-secondary">
+                <i class="bi bi-x-circle"></i> Quay lại
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Delete Confirmation Modal -->
+@if (Model?.Player?.Id > 0)
+{
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa cầu thủ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Bạn có muốn xóa cầu thủ "<strong>@Model.Player.Name</strong>" ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                    <form asp-action="Delete" asp-route-id="@Model.Player.Id" method="post">
+                        <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

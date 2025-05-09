@@ -1,0 +1,93 @@
+﻿@using FootballWeb.PlayerAPI.ApiModel
+@model Root
+@{
+    ViewData["Title"] = $"{Model.Hits} - Player Details";
+    var player = Model.Hits?.Hit.First().Response;
+    var returnUrl = "https://resources.premierleague.com/premierleague/photos/players/110x140/";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Player Information</h3>
+                </div>
+                <div class="card-body">
+
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(player?.AltIds?.Opta))
+                        {
+                            <div class="text-center mb-3">
+                                <img src="@(returnUrl + $"{player.AltIds.Opta}.png")" class="img-fluid rounded" alt="@player?.Name?.Display" style="max-height: 200px;">
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center mb-3">
+                                <div class="placeholder-image bg-light d-flex align-items-center justify-content-center rounded" style="height: 200px; width: 100%;">
+                                    <i class="bi bi-person-fill" style="font-size: 3rem;"></i>
+                                </div>
+                            </div>
+                        }
+                        <h4 class="card-title">@player?.Name?.Display</h4>
+                        <div class="mt-3">
+                            <p><strong>Nationality:</strong> @player?.Birth?.Country?.Name</p>
+                            <p><strong>Age:</strong> @player?.Age</p>
+                            <p><strong>Year of Birth:</strong> @player?.Birth?.Date?.Label</p>
+                            <p><strong>Shirt Number:</strong> @player?.Info?.ShirtNum</p>
+                            <p><strong>Position:</strong> @player?.Info?.PositionInfo</p>
+                            <p><strong>Team:</strong> @player?.CurrentTeam?.Name</p>
+                            <p><strong>Height:</strong> @(player?.Height)cm</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Match Statistics</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Statistic</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Appearances</td>
+                                    <td>@player?.Appearances</td>
+                                </tr>
+                                <tr>
+                                    <td>Goals</td>
+                                    <td>@player?.Goals</td>
+                                </tr>
+                                <tr>
+                                    <td>Assists</td>
+                                    <td>@player?.Assists</td>
+                                </tr>
+                                <tr>
+                                    <td>Tackles</td>
+                                    <td>@player?.Tackles</td>
+                                </tr>
+                                <tr>
+                                    <td>Saves</td>
+                                    <td>@player?.Saves</td>
+                                </tr>
+                                <tr>
+                                    <td>CleanSheets (GK)</td>
+                                    <td>@player?.CleanSheets</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

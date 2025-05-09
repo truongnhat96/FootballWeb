@@ -1,0 +1,51 @@
+﻿@model List<Advertisement>
+@{
+    Layout = "~/Views/Shared/Manage/_AdminLayout.cshtml";
+    ViewData["Title"] = "Quản lý quảng cáo";
+}
+
+<h2 class="mb-4">Quảng cáo chờ duyệt</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Message"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Hình ảnh</th>
+            <th>Tiêu đề</th>
+            <th>Mô tả</th>
+            <th>Email liên hệ</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ad in Model)
+        {
+            <tr>
+                <td>
+                    <img src="@ad.ImagePath" width="150" class="img-thumbnail" />
+                </td>
+                <td>@ad.Title</td>
+                <td>@ad.Description</td>
+                <td>@ad.ContactEmail</td>
+                <td>
+                    @if (!ad.IsApproved)
+                    {
+                        <a asp-action="Approve" asp-route-id="@ad.Id" class="btn btn-success btn-sm mb-1">✔ Duyệt</a>
+                    }
+                    <a asp-action="Delete" asp-route-id="@ad.Id" class="btn btn-danger btn-sm">🗑 Xóa</a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+

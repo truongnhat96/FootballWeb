@@ -1,0 +1,243 @@
+﻿@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Premier League Matches";
+    var matchesJson = ViewBag.Matches as string;
+    var matches = JsonDocument.Parse(matchesJson);
+    var matchList = matches.RootElement.GetProperty("matches");
+
+    int pageSize = 6; // số trận mỗi trang
+    int currentPage = 1;
+    var queryPage = Context.Request.Query["page"].ToString();
+    if (!string.IsNullOrEmpty(queryPage) && int.TryParse(queryPage, out var parsedPage))
+    {
+        currentPage = parsedPage;
+    }
+    var finishedMatches = matchList.EnumerateArray()
+        .Where(m => m.GetProperty("status").GetString() == "FINISHED")
+        .ToList();
+
+    int totalPages = (int)Math.Ceiling((double)finishedMatches.Count / pageSize);
+    var pagedMatches = finishedMatches
+        .Skip((currentPage - 1) * pageSize)
+        .Take(pageSize);
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        *, ::after, ::before {
+            box-sizing: border-box;
+        }
+
+        .Lam {
+            border-radius:21px;
+            font-size: 14px;
+            line-height: 24px;
+            font-weight: 400;
+            background: #C33764; /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #1D2671, #C33764); /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #1D2671, #C33764); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            color: white;
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif;
+        }
+
+        :root {
+            --main-color: #FE6F27;
+            --main-bg-btn: #18C366;
+            --color2: #0EE8E8;
+            --color3: #FFD608;
+            --border-color: #3B3B3B;
+        }
+
+        .row {
+            padding: 0 15px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .match-card {
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background-color: #2C2F38;
+            padding: 15px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+            .match-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            }
+
+        .team-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            display: block;
+            margin: 5px auto;
+        }
+
+        .team-name {
+            font-size: 0.95rem;
+            text-align: center;
+            color: white;
+        }
+
+        .score {
+            font-weight: bold;
+            font-size: 1.25rem;
+            text-align: center;
+            color: var(--color3);
+        }
+
+        .match-time, .match-status {
+            font-size: 0.9rem;
+            color: #aaa;
+            text-align: center;
+        }
+
+        .match-btn {
+            margin-top: 10px;
+            background-color: var(--main-bg-btn);
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+            .match-btn:hover {
+                background-color: var(--main-color);
+                cursor: pointer;
+            }
+
+        h2 {
+            margin: 20px 0;
+            text-align: center;
+            color: var(--color2);
+        }
+
+        @@media (max-width: 768px) {
+            .row {
+                gap: 15px;
+            }
+
+            .match-card {
+                max-width: 300px;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .row {
+                gap: 10px;
+            }
+
+            .match-card {
+                max-width: 100%;
+            }
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .page-item {
+            padding: 8px 14px;
+            background-color: #000;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 16px;
+            min-width: 40px;
+            text-align: center;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+            .page-item:hover {
+                background-color: #333;
+                transform: scale(1.05);
+            }
+
+        .page-current {
+            border: 2px solid var(--color3);
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="Lam">
+        <h2>Premier League Matches</h2>
+        <div class="row">
+            @foreach (var match in pagedMatches)
+            {
+                var homeTeam = match.GetProperty("homeTeam");
+                var awayTeam = match.GetProperty("awayTeam");
+
+                var homeName = homeTeam.GetProperty("name").GetString();
+                var awayName = awayTeam.GetProperty("name").GetString();
+
+                var homeLogo = homeTeam.TryGetProperty("crest", out var crest1) ? crest1.GetString() : "";
+                var awayLogo = awayTeam.TryGetProperty("crest", out var crest2) ? crest2.GetString() : "";
+
+                var score = match.GetProperty("score");
+                var fullTime = score.GetProperty("fullTime");
+                var homeScore = fullTime.GetProperty("home").ToString();
+                var awayScore = fullTime.GetProperty("away").ToString();
+
+                var utcDate = match.GetProperty("utcDate").GetDateTime().ToLocalTime().ToString("dd/MM/yyyy HH:mm");
+                var status = match.GetProperty("status").GetString();
+                <div class="match-card">
+                    <div class="team-name">@homeName</div>
+                    <img src="@homeLogo" alt="@homeName Logo" class="team-logo" />
+                    <div class="score">@homeScore - @awayScore</div>
+                    <img src="@awayLogo" alt="@awayName Logo" class="team-logo" />
+                    <div class="team-name">@awayName</div>
+                    <div class="match-time">Time: @utcDate</div>
+                    <div class="match-status">Status: @status</div>
+                    <div class="match-btn">View Details</div>
+                </div>
+            }
+
+        </div>
+        <div class="pagination">
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                if (i == 1 || i == totalPages || Math.Abs(i - currentPage) <= 2)
+                {
+                    if (i == currentPage)
+                    {
+                        <span class="page-item page-current">@i</span>
+                    }
+                    else
+                    {
+                        <a href="?page=@i" class="page-item">@i</a>
+                    }
+                }
+                else if (i == currentPage - 3 || i == currentPage + 3)
+                {
+                    <span class="page-item">...</span>
+                }
+            }
+        </div>
+    </div>
+
+
+
+</body>
+</html>

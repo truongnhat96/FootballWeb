@@ -1,0 +1,38 @@
+﻿@model List<UsersModel>
+@{
+    ViewData["Title"] = "DANH SÁCH NGƯỜI DÙNG";
+}
+
+
+<h4>@ViewData["Title"]</h4>
+@if (TempData["Status"] != null)
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        @TempData["Status"]
+    </div>
+}
+<table class="table table-striped">
+    <tr>
+        <th>UserName</th>
+        <th>Roles</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var user in @Model)
+    {
+        <tr>
+            <td>@user.UserName</td>
+            <td>@user.RoleName</td>
+            <td>
+                <form method="get" asp-action="UpdateRole" class="d-inline">
+                    <input type="hidden" name="UserName" value="@user.UserName" />
+                    <input type="hidden" name="RoleName" value="@user.RoleName" />
+                    <button class="btn btn-primary btn-sm">
+                        Cập nhật Role
+                    </button>
+                </form>
+            </td>
+        </tr>
+
+    }
+</table>

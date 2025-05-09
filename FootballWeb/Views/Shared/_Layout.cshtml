@@ -1,0 +1,256 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FootballWeb</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/FootballWeb.styles.css" asp-append-version="true" />
+</head>
+<style>
+    /* === Footer Custom Style === */
+    .site-footer {
+        background-color: #f8f9fa;
+        padding: 40px 20px;
+        color: #333;
+        font-size: 14px;
+        margin-top: 40px;
+    }
+
+    .footer-top {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .footer-column {
+        flex: 1;
+        min-width: 220px;
+        max-width: 300px;
+    }
+
+        .footer-column h4 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+
+            .footer-column ul li {
+                margin-bottom: 6px;
+                cursor: pointer;
+            }
+
+                .footer-column ul li:hover {
+                    text-decoration: underline;
+                }
+
+    .social-icons a {
+        display: inline-block;
+        margin-right: 10px;
+        width: 32px;
+        height: 32px;
+    }
+
+    .social-icons img {
+        width: 100%;
+        height: auto;
+        border-radius: 50%;
+        transition: transform 0.3s;
+    }
+
+        .social-icons img:hover {
+            transform: scale(1.1);
+        }
+
+    .footer-bottom {
+        background-color: #343a40;
+        color: white;
+        padding: 15px 10px;
+        text-align: center;
+        margin-top: 30px;
+    }
+
+        .footer-bottom p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+    .footer-banner {
+        width: 100%;
+        margin-top: 15px;
+        border-radius: 8px;
+    }
+
+    /* Responsive */
+    /* === Custom Navbar Style === */
+    header .navbar {
+        background-color: #111827 !important;
+        padding: 0.75rem 1.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    header .navbar-brand {
+        color: #ffffff !important;
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+        header .navbar-brand:hover {
+            color: #60a5fa !important;
+        }
+
+    header .nav-link {
+        color: #ffffff !important;
+        margin-right: 15px;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+        header .nav-link:hover {
+            color: #60a5fa !important;
+        }
+
+    header .navbar-toggler {
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    header .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 30 30'%3e%3cpath stroke='%23ffffff' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+    header .navbar-nav .nav-item {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Responsive tweaks */
+    
+
+    header .nav-link {
+        margin: 10px 0;
+    }
+
+    }
+    .xemdoi{
+        margin-left:100%;
+    }
+</style>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Football" asp-action="Index">⚡SOFA SCORE</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">TRANG CHỦ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">CHUYỂN NHƯỢNG</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Advertisement" asp-action="Create">ĐẶT QUẢNG CÁO</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Advertisement" asp-action="ApprovedAds">QUẢNG CÁO</a>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Football" asp-action="BangXepHang">BẢNG XẾP HẠNG</a>
+                        </li>
+
+
+                       
+                       
+                        
+                    </ul>
+                </div>
+                <div class=" col-md-auto">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            @await Html.PartialAsync("_TeamPartial")
+                        </li>
+                        @await Html.PartialAsync("_LoginPartial")
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="footer-column">
+                <h4>Chuyên mục</h4>
+                <ul>
+                    <li>Chính trị</li>
+                    <li>Thời sự</li>
+                    <li>Kinh doanh</li>
+                    <li>Dân tộc và Tôn giáo</li>
+                    <li>Thể thao</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Khám phá</h4>
+                <ul>
+                    <li>Giáo dục</li>
+                    <li>Thế giới</li>
+                    <li>Đời sống</li>
+                    <li>Văn hóa - Giải trí</li>
+                    <li>Sức khỏe</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Tiện ích</h4>
+                <ul>
+                    <li>Pháp luật</li>
+                    <li>Ô tô xe máy</li>
+                    <li>Du lịch</li>
+                    <li>Bất động sản</li>
+                    <li>Bạn đọc</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Khác</h4>
+                <ul>
+                    <li>Ảnh</li>
+                    <li>Video</li>
+                    <li>Multimedia</li>
+                    <li>Podcast</li>
+                    <li>Tin tức 24h</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Kết nối</h4>
+                <div class="social-icons">
+                    <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1200px-Facebook_Logo_%282019%29.png" alt="Facebook"></a>
+                    <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="YouTube"></a>
+                    <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Ionicons_logo-tiktok.svg/768px-Ionicons_logo-tiktok.svg.png" alt="TikTok"></a>
+                    <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Logo_of_Twitter.svg/768px-Logo_of_Twitter.svg.png" alt="Twitter"></a>
+                    <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Icon_of_Zalo.svg/75px-Icon_of_Zalo.svg.png" alt="Zalo"></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Bản quyền thuộc về SofaScore  | Liên hệ: contact@Sofascoreclone.vn</p>
+            <img src="https://truyenhinhkplusvn.com/wp-content/uploads/2019/06/Banner-Ngo%E1%BA%A1i-h%E1%BA%A1ng-Anh-EPL-Giao-h%E1%BB%AFu-h%C3%A8-Asia-Trophy.png" alt="Premier League" class="footer-banner">
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

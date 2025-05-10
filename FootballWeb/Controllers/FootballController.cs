@@ -37,7 +37,6 @@ namespace FootballWeb.Controllers
 
         // Hiển thị chi tiết trận đấu theo Match ID
         public async Task<IActionResult> Details(int id)
-
         {
             try
             {

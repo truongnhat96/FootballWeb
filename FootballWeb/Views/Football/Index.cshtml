@@ -36,7 +36,7 @@
         }
 
         .Lam {
-            border-radius:21px;
+            border-radius: 21px;
             font-size: 14px;
             line-height: 24px;
             font-weight: 400;
@@ -115,6 +115,8 @@
             text-align: center;
             border-radius: 5px;
             width: 100%;
+            text-decoration: none;
+            justify-content: center;
         }
 
             .match-btn:hover {
@@ -186,6 +188,7 @@
         <div class="row">
             @foreach (var match in pagedMatches)
             {
+                var matchId = int.Parse(match.GetProperty("id").ToString());
                 var homeTeam = match.GetProperty("homeTeam");
                 var awayTeam = match.GetProperty("awayTeam");
 
@@ -210,7 +213,10 @@
                     <div class="team-name">@awayName</div>
                     <div class="match-time">Time: @utcDate</div>
                     <div class="match-status">Status: @status</div>
-                    <div class="match-btn">View Details</div>
+                    <form asp-action="Details" method="post" asp-controller="Football">
+                        <input type="hidden" name="id" value="@matchId" />
+                        <button class="match-btn">View Details</button>
+                    </form>
                 </div>
             }
 
@@ -236,8 +242,5 @@
             }
         </div>
     </div>
-
-
-
 </body>
 </html>

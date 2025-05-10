@@ -13,7 +13,7 @@ namespace FootballWeb.Repository
         public DbSet<Team> Teams { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<PlayerRecord> PlayerRecords { get; set; }
-        
+        public DbSet<Statistic> Statistics { get; set; }
         public DbSet<Advertisement> Advertisements { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

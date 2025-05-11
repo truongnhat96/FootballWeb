@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FootballWeb.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250510165723_InitStatistic")]
-    partial class InitStatistic
+    [Migration("20250511071536_matches")]
+    partial class matches
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -160,8 +160,11 @@ namespace FootballWeb.Migrations
 
             modelBuilder.Entity("FootballWeb.Repository.Statistic", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("BallPossession")
                         .HasColumnType("int");
@@ -174,6 +177,11 @@ namespace FootballWeb.Migrations
 
                     b.Property<int>("FreeKicks")
                         .HasColumnType("int");
+
+                    b.Property<string>("MatchId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Offsides")
                         .HasColumnType("int");

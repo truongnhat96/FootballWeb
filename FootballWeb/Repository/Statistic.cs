@@ -7,7 +7,9 @@ namespace FootballWeb.Repository
     public class Statistic
     {
         [Key]
-        public required string Id { get; set; }
+        public int Id { get; set; }
+        [StringLength(100)]
+        public required string MatchId { get; set; }
         public int CornerKicks { get; set; }
         public int YellowCards { get; set; }
         public int RedCards { get; set; }

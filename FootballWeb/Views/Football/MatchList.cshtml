@@ -1,0 +1,92 @@
+﻿@using System.Text.Json
+@model string
+@{
+    Layout = "/Views/Shared/Manage/_AdminLayout.cshtml";
+    ViewData["Title"] = "Match Manager";
+    var matches = JsonDocument.Parse(Model);
+    var matchList = matches.RootElement.GetProperty("matches").EnumerateArray()
+                    .Where(m => m.GetProperty("status").GetString() == "FINISHED")
+                    .ToList();
+}
+
+<style>
+    .team-logo {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+        display: block;
+        margin: 5px auto;
+    }
+</style>
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Danh sách trận đấu</h2>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info">
+            Không tìm thấy trận đấu nào từ API
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Đội nhà</th>
+                        <th>Logo đội nhà</th>
+                        <th>Tỉ số</th>
+                        <th>Tỉ số</th>
+                        <th>Logo đội khách</th>
+                        <th>Đội khách</th>
+                        <th>Thời gian</th>
+                        <th>Trạng thái</th>
+                        <th>Tùy chỉnh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var match in matchList)
+                    {
+                        var matchId = match.GetProperty("id").GetInt32().ToString();
+                        var homeTeam = match.GetProperty("homeTeam");
+                        var awayTeam = match.GetProperty("awayTeam");
+
+                        var homeName = homeTeam.GetProperty("name").GetString();
+                        var awayName = awayTeam.GetProperty("name").GetString();
+
+                        var homeLogo = homeTeam.TryGetProperty("crest", out var crest1) ? crest1.GetString() : "";
+                        var awayLogo = awayTeam.TryGetProperty("crest", out var crest2) ? crest2.GetString() : "";
+
+                        var score = match.GetProperty("score");
+                        var fullTime = score.GetProperty("fullTime");
+                        var homeScore = fullTime.GetProperty("home").ToString();
+                        var awayScore = fullTime.GetProperty("away").ToString();
+
+                        var utcDate = match.GetProperty("utcDate").GetDateTime().ToLocalTime().ToString("dd/MM/yyyy HH:mm");
+                        var status = match.GetProperty("status").GetString();
+                        <tr>
+                            <td>@homeName</td>
+                            <td><img src="@homeLogo" alt="@homeLogo" class="team-logo" /></td>
+                            <td>@homeScore</td>
+                            <td>@awayScore</td>
+                            <td><img src="@awayLogo" alt="@awayName Logo" class="team-logo" /></td>
+                            <td>@awayName</td>
+                            <td>@utcDate</td>
+                            <td>@status</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="/Edit/Match/@matchId/@(homeName + " - " + awayName)" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-pencil"></i> Tùy chỉnh thông số trận đấu
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

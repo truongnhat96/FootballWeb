@@ -1,0 +1,243 @@
+﻿@using FootballWeb.Repository
+@model MatchStatistic
+@{
+    Layout = "/Views/Shared/Manage/_AdminLayout.cshtml";
+    var title = Model?.HomeTeam != null ? "Chỉnh sửa thông số" : "Thêm mới thông số 2 đội";
+    var matchName = TempData["MatchName"]?.ToString() ?? string.Empty;
+    var matchId = ViewContext.RouteData.Values["id"]?.ToString() ?? "0";
+    var tok = matchName.Split(['-'], StringSplitOptions.RemoveEmptyEntries);
+    ViewData["Title"] = title;
+}
+
+<div class="container-fluid">
+    <h2 class="mb-4">@title</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            @TempData["Message"]
+        </div>
+    }
+
+    <form asp-controller="Football" asp-action="EditMatch" asp-route-id="@(Model?.HomeTeam?.MatchId ?? matchId)" asp-route-name="@matchName" method="post">
+        @if (Model?.HomeTeam != null)
+        {
+            <input type="hidden" asp-for="HomeTeam.Id" />
+            <input type="hidden" asp-for="AwayTeam.Id" />
+        }
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Thống kê trận đấu</h5>
+            </div>
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        @tok[0]
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        @tok[1]
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="HomeTeam.Saves" class="form-label">Cứu thua</label>
+                        <input asp-for="HomeTeam.Saves" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="HomeTeam.Saves" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="AwayTeam.Saves" class="form-label">Cứu thua</label>
+                        <input asp-for="AwayTeam.Saves" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="AwayTeam.Saves" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="HomeTeam.Shots" class="form-label">Tổng sút</label>
+                        <input asp-for="HomeTeam.Shots" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="HomeTeam.Shots" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="AwayTeam.Shots" class="form-label">Tổng sút</label>
+                        <input asp-for="AwayTeam.Shots" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="AwayTeam.Shots" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="HomeTeam.ShotsOnGoal" class="form-label">Sút trúng đích</label>
+                        <input asp-for="HomeTeam.ShotsOnGoal" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="HomeTeam.ShotsOnGoal" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="AwayTeam.ShotsOnGoal" class="form-label">Sút trúng đích</label>
+                        <input asp-for="AwayTeam.ShotsOnGoal" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="AwayTeam.ShotsOnGoal" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="HomeTeam.ShotsOffGoal" class="form-label">Sút trượt</label>
+                        <input asp-for="HomeTeam.ShotsOffGoal" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="HomeTeam.ShotsOffGoal" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="AwayTeam.ShotsOffGoal" class="form-label">Sút trượt</label>
+                        <input asp-for="AwayTeam.ShotsOffGoal" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="AwayTeam.ShotsOffGoal" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="HomeTeam.FreeKicks" class="form-label">Đá phạt</label>
+                        <input asp-for="HomeTeam.FreeKicks" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="HomeTeam.FreeKicks" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="AwayTeam.FreeKicks" class="form-label">Đá phạt</label>
+                        <input asp-for="AwayTeam.FreeKicks" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="AwayTeam.FreeKicks" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="HomeTeam.CornerKicks" class="form-label">Phạt góc</label>
+                        <input asp-for="HomeTeam.CornerKicks" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="HomeTeam.CornerKicks" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="AwayTeam.CornerKicks" class="form-label">Phạt góc</label>
+                        <input asp-for="AwayTeam.CornerKicks" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="AwayTeam.CornerKicks" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="HomeTeam.YellowCards" class="form-label">Thẻ vàng</label>
+                        <input asp-for="HomeTeam.YellowCards" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="HomeTeam.YellowCards" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="AwayTeam.YellowCards" class="form-label">Thẻ vàng</label>
+                        <input asp-for="AwayTeam.YellowCards" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="AwayTeam.YellowCards" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="HomeTeam.RedCards" class="form-label">Thẻ đỏ</label>
+                        <input asp-for="HomeTeam.RedCards" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="HomeTeam.RedCards" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="AwayTeam.RedCards" class="form-label">Thẻ đỏ</label>
+                        <input asp-for="AwayTeam.RedCards" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="AwayTeam.RedCards" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="HomeTeam.Fouls" class="form-label">Phạm lỗi</label>
+                        <input asp-for="HomeTeam.Fouls" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="HomeTeam.Fouls" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="AwayTeam.Fouls" class="form-label">Phạm lỗi</label>
+                        <input asp-for="AwayTeam.Fouls" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="AwayTeam.Fouls" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="HomeTeam.Offsides" class="form-label">Việt vị</label>
+                        <input asp-for="HomeTeam.Offsides" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="HomeTeam.Offsides" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="AwayTeam.Offsides" class="form-label">Việt vị</label>
+                        <input asp-for="AwayTeam.Offsides" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="AwayTeam.Offsides" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="HomeTeam.ThrowIns" class="form-label">Ném biên</label>
+                        <input asp-for="HomeTeam.ThrowIns" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="HomeTeam.ThrowIns" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="AwayTeam.ThrowIns" class="form-label">Ném biên</label>
+                        <input asp-for="AwayTeam.ThrowIns" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="AwayTeam.ThrowIns" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="HomeTeam.BallPossession" class="form-label">Kiểm soát bóng (%)</label>
+                        <input asp-for="HomeTeam.BallPossession" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="HomeTeam.BallPossession" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="AwayTeam.BallPossession" class="form-label">Kiểm soát bóng (%)</label>
+                        <input asp-for="AwayTeam.BallPossession" class="form-control" type="number" min="0" required />
+                        <span asp-validation-for="AwayTeam.BallPossession" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 mb-5">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i> Lưu Thay đổi
+            </button>
+            @if (Model?.HomeTeam != null)
+            {
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <i class="bi bi-trash"></i> Xóa trận đấu
+                </button>
+            }
+        </div>
+    </form>
+</div>
+
+<!-- Delete Confirmation Modal -->
+@if (Model?.HomeTeam != null)
+{
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa trận đấu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Bạn có muốn xóa thông số trận đấu "<strong>@matchName</strong>" ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                    <form asp-action="DeleteMatch" asp-route-id="@Model.HomeTeam.MatchId" asp-route-name="@matchName" method="post">
+                        <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

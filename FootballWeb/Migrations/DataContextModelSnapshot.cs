@@ -157,8 +157,11 @@ namespace FootballWeb.Migrations
 
             modelBuilder.Entity("FootballWeb.Repository.Statistic", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("BallPossession")
                         .HasColumnType("int");
@@ -171,6 +174,11 @@ namespace FootballWeb.Migrations
 
                     b.Property<int>("FreeKicks")
                         .HasColumnType("int");
+
+                    b.Property<string>("MatchId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Offsides")
                         .HasColumnType("int");

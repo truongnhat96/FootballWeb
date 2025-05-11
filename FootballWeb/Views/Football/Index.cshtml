@@ -194,6 +194,7 @@
 
                 var homeName = homeTeam.GetProperty("name").GetString();
                 var awayName = awayTeam.GetProperty("name").GetString();
+                var matchName = homeName + " - " + awayName;
 
                 var homeLogo = homeTeam.TryGetProperty("crest", out var crest1) ? crest1.GetString() : "";
                 var awayLogo = awayTeam.TryGetProperty("crest", out var crest2) ? crest2.GetString() : "";
@@ -202,6 +203,7 @@
                 var fullTime = score.GetProperty("fullTime");
                 var homeScore = fullTime.GetProperty("home").ToString();
                 var awayScore = fullTime.GetProperty("away").ToString();
+
 
                 var utcDate = match.GetProperty("utcDate").GetDateTime().ToLocalTime().ToString("dd/MM/yyyy HH:mm");
                 var status = match.GetProperty("status").GetString();
@@ -215,6 +217,7 @@
                     <div class="match-status">Status: @status</div>
                     <form asp-action="Details" method="post" asp-controller="Football">
                         <input type="hidden" name="id" value="@matchId" />
+                        <input type="hidden" name="name" value="@matchName" />
                         <button class="match-btn">View Details</button>
                     </form>
                 </div>

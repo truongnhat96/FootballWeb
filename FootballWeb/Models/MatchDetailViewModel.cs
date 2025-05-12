@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FootballWeb.Repository;
+using System;
 using System.Collections.Generic;
 
 namespace FootballWeb.Models
@@ -73,5 +74,10 @@ namespace FootballWeb.Models
         public string Result { get; set; } // Kết quả trận đấu (ví dụ: "2-1", "Hòa", v.v.)
     }
 
+    public class MatchStatistic
+    {
+        public Statistic? HomeTeam { get; set; } // Thống kê của đội nhà
+        public Statistic? AwayTeam { get; set; } // Thống kê của đội khách
+    }
 
 }

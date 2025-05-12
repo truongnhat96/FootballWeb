@@ -4,12 +4,40 @@
     Layout = "/Views/Shared/Admin/_LoginLayout.cshtml";
     ViewData["Title"] = "ĐĂNG NHẬP";
 }
+<style>
+    #nen{
+        background: #C33764; /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #1D2671, #C33764); /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #1D2671, #C33764);
+        opacity:0.95;
+    }
+
+    h1   {
+        font-weight:1000;
+        color:#fff; 
+    }
+    a   {
+        font-weight:10000;
+        color:#fff; 
+    }
+
+    .custom-control-label {
+        font-weight: 10000;
+        color: #fff;
+    }
+
+</style>
 <div class="row">
-    <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
-    <div class="col-lg-6">
+    <div class="col-lg-6 d-none d-lg-block p-0">
+        <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;">
+            <source src="~/Video/Video.mp4" type="video/mp4">
+            Trình duyệt của bạn không hỗ trợ video.
+        </video>
+    </div>
+    <div id ="nen" class="col-lg-6">
         <div class="p-5">
             <div class="text-center">
-                <h1 class="h4 text-gray-900 mb-4">@ViewData["Title"]</h1>
+                <h1>Đăng Nhập</h1>
             </div>
             <form class="user" id="account" method="post">
                 <div asp-validation-summary="All" class="text-danger"></div>
@@ -26,7 +54,9 @@
                 <div class="form-group">
                     <div class="custom-control custom-checkbox small">
                         <input asp-for="Input.RememberMe" class="custom-control-input" />
-                        <label class="custom-control-label" asp-for="Input.RememberMe"></label>
+                        <label class="custom-control-label" asp-for="Input.RememberMe">
+                            Duy trì đăng nhập?
+                        </label>
                     </div>
                 </div>
 
@@ -76,5 +106,12 @@
 </div>
 
 @section Scripts {
+    <script>
+        const video = document.getElementById('bg-video');
+        video.addEventListener('ended', () => {
+            video.currentTime = 0;
+            video.play();
+        });
+    </script>
     <partial name="_ValidationScriptsPartial" />
 }

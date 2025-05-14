@@ -194,15 +194,27 @@
     }
 
     }
+
+    <style >
+    .sort-icon {
+        margin-left: 4px;
+        font-size: 0.8rem;
+    }
+</style>
+
 </style>
 
 <div class="transition-colors duration-500 bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
 
 
     <!-- Header -->
-    <div class="text-center py-6 bg-indigo-700 text-white">
-        <h1 class="text-3xl font-bold">🔥 Premier League Standings</h1>
+    <div class="flex items-center justify-center gap-4 py-6 bg-indigo-700 text-white">
+        <img src="https://upload.wikimedia.org/wikipedia/en/f/f2/Premier_League_Logo.svg"
+             alt="EPL Logo"
+             class="w-12 h-12" />
+        <h1 class="text-3xl font-bold">Bảng Xếp Hạng</h1>
     </div>
+
 
 
     <!-- Container -->
@@ -212,29 +224,34 @@
 
         <!-- Dropdown Sort and Filter -->
         <div class="mb-6 flex items-center space-x-4">
-            <select class="p-2 border rounded-md">
-                <option>Sort by Points</option>
-                <option>Sort by Wins</option>
-                <option>Sort by Goals</option>
+            <select id="sortSelect" class="p-2 border rounded-md">
+                <option value="">-- Sắp xếp --</option>
+                <option value="Sort by Points">Sort by Points</option>
+                <option value="Sort by Wins">Sort by Wins</option>
+                <option value="Sort by Goals">Sort by Goals</option>
             </select>
-            <input type="text" class="p-2 border rounded-md" placeholder="Search for a team..." />
+            <input type="text" id="searchInput" class="p-2 border rounded-md" placeholder="Search for a team..." />
+            <button id="resetBtn" class="px-3 py-2 bg-gray-300 rounded hover:bg-gray-400">Reset</button>
         </div>
 
+
         <!-- Standings Table -->
-        <h2 class="text-2xl font-semibold mb-4">📊 Bảng Xếp Hạng</h2>
+        <h2 class="text-2xl font-semibold mb-4"></h2>
         <table class="w-full table-auto">
             <thead>
                 <tr class="bg-gray-200 dark:bg-gray-700 text-sm font-semibold">
                     <th class="p-3 text-left">#</th>
                     <th class="p-3 text-left">Đội</th>
                     <th class="p-3 text-left">Trận</th>
-                    <th class="p-3 text-left">Thắng</th>
+                    <th class="p-3 text-left" data-sort-key="Sort by Wins">Thắng <span class="sort-icon"></span></th>
                     <th class="p-3 text-left">Hòa</th>
                     <th class="p-3 text-left">Thua</th>
-                    <th class="p-3 text-left">HS</th>
-                    <th class="p-3 text-left">Điểm</th>
+                    <th class="p-3 text-left" data-sort-key="Sort by Goals">HS <span class="sort-icon"></span></th>
+                    <th class="p-3 text-left" data-sort-key="Sort by Points">Điểm <span class="sort-icon"></span></th>
+                    <th class="p-3 text-left">Phong độ</th>
                 </tr>
             </thead>
+
             <tbody>
                 @foreach (var team in tableArray.EnumerateArray())
                 {
@@ -284,5 +301,108 @@
         </table>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tableBody = document.querySelector("table tbody");
+        const searchInput = document.getElementById("searchInput");
+        const sortSelect = document.getElementById("sortSelect");
+        const resetBtn = document.getElementById("resetBtn");
+        const allRows = Array.from(tableBody.querySelectorAll("tr"));
+        const thElements = document.querySelectorAll("th[data-sort-key]");
+
+        let currentSort = { column: null, asc: false, key: "" };
+
+        function getCellValue(row, index) {
+            return row.children[index]?.innerText.trim() || "";
+        }
+
+            function renderRows(rows) {
+        tableBody.innerHTML = "";
+        rows.forEach((row, index) => {
+            // Cập nhật lại cột số thứ tự (ô đầu tiên trong mỗi hàng)
+            const sttCell = row.querySelector("td:first-child");
+            if (sttCell) {
+                sttCell.textContent = index + 1;
+            }
+            tableBody.appendChild(row);
+        });
+    }
+
+        function updateSortIcons() {
+            thElements.forEach(th => {
+                const icon = th.querySelector(".sort-icon");
+                if (!icon) return;
+                if (th.getAttribute("data-sort-key") === currentSort.key) {
+                    icon.textContent = currentSort.asc ? "↑" : "↓";
+                } else {
+                    icon.textContent = "";
+                }
+            });
+        }
+
+        function sortRows(rows, criteria) {
+            const indexMap = {
+                "Sort by Points": 7,
+                "Sort by Wins": 3,
+                "Sort by Goals": 6
+            };
+
+            const colIndex = indexMap[criteria];
+            if (!colIndex) return rows;
+
+            if (currentSort.key === criteria) {
+                currentSort.asc = !currentSort.asc;
+            } else {
+                currentSort = { column: colIndex, asc: false, key: criteria };
+            }
+
+            updateSortIcons();
+
+            return [...rows].sort((a, b) => {
+                const aVal = parseInt(getCellValue(a, colIndex)) || 0;
+                const bVal = parseInt(getCellValue(b, colIndex)) || 0;
+                return currentSort.asc ? aVal - bVal : bVal - aVal;
+            });
+        }
+
+        function filterRows(rows, keyword) {
+            return rows.filter(row => {
+                const teamName = getCellValue(row, 1).toLowerCase();
+                return teamName.includes(keyword.toLowerCase());
+            });
+        }
+
+        function updateTable() {
+            let rows = [...allRows];
+            const keyword = searchInput.value;
+            const sortCriteria = sortSelect.value;
+
+            if (keyword) {
+                rows = filterRows(rows, keyword);
+            }
+
+            if (sortCriteria) {
+                rows = sortRows(rows, sortCriteria);
+            } else {
+                currentSort = { column: null, asc: false, key: "" };
+                updateSortIcons();
+            }
+
+            renderRows(rows);
+        }
+
+        searchInput.addEventListener("input", updateTable);
+        sortSelect.addEventListener("change", updateTable);
+
+        resetBtn.addEventListener("click", () => {
+            searchInput.value = "";
+            sortSelect.value = "";
+            currentSort = { column: null, asc: false, key: "" };
+            updateSortIcons();
+            renderRows(allRows);
+        });
+    });
+</script>
+
 
 

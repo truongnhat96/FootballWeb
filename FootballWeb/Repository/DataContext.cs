@@ -15,6 +15,7 @@ namespace FootballWeb.Repository
         public DbSet<PlayerRecord> PlayerRecords { get; set; }
         public DbSet<Statistic> Statistics { get; set; }
         public DbSet<Advertisement> Advertisements { get; set; }
+        public DbSet<Stadium> Stadiums { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -1,0 +1,64 @@
+﻿@model List<FootballWeb.Models.Stadium>
+@{
+    ViewData["Title"] = "Stadiums";
+}
+
+
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Danh sách Sân Đấu</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        @foreach (var stadium in Model)
+        {
+            <div class="col stadium-card">
+                <div class="card h-100">
+                    <img src="@stadium.ImageUrl" class="card-img-top" alt="@stadium.Name" />
+                    <div class="card-body">
+                        <h5 class="card-title">@stadium.Name</h5>
+                        <p class="card-text"><strong>Đội bóng:</strong> @stadium.TeamName</p>
+                        <p class="card-text"><strong>Vị trí:</strong> @stadium.Location</p>
+                        <p class="card-text"><strong>Sức chứa:</strong> @stadium.Capacity</p>
+                        <p class="card-text"><strong>Khánh thành:</strong> @stadium.FoundedYear</p>
+                        <a href="/Stadium/Details/@stadium.Id" class="btn btn-primary">Xem Chi Tiết</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .stadium-card .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 20px;
+    }
+
+     .stadium-card .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+     }
+
+    .card-img-top {
+        height: 180px;
+        object-fit: cover;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+    }
+
+    .btn{
+        display:flex;
+        justify-content: center;
+        margin:0 auto;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn:hover{
+            background-color: #7F8CFF;
+            transform:scale(1.05);
+    }
+
+    .card-body p.card-text {
+        margin-bottom: 4px; /* giảm khoảng cách dưới */
+        line-height: 1.2; /* giảm chiều cao dòng nếu muốn */
+    }
+</style>

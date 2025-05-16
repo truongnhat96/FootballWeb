@@ -1,0 +1,46 @@
+﻿@model FootballWeb.Models.Stadium
+
+@{
+    ViewData["Title"] = "Chi tiết Sân Vận Động";
+}
+
+<div class="container mt-5">
+    <!-- Nút quay lại -->
+    <div class="mb-3">
+        <a href="@Url.Action("Index", "Stadium")" class="btn btn-outline-dark">
+            ← Quay lại danh sách
+        </a>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@Model.ImageUrl" class="img-fluid rounded shadow" />
+        </div>
+        <div class="col-md-6">
+            <h2>@Model.Name</h2>
+            <img src="@Model.TeamLogoUrl" style="height:60px" />
+            <p><strong>Đội bóng chủ sân:</strong> @Model.TeamName</p>
+            <p><strong>Vị trí:</strong> @Model.Location</p>
+            <p><strong>Sức chứa:</strong> @Model.Capacity.ToString("N0")</p>
+            <p><strong>Khánh thành:</strong> @Model.FoundedYear</p>
+            <p><strong>Mô tả:</strong></p>
+            <p>@Model.Description</p>
+        </div>
+    </div>
+    @if (!string.IsNullOrEmpty(Model.MapEmbedUrl))
+    {
+        <div class="mt-4">
+            <iframe src="@Model.MapEmbedUrl" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    }
+</div>
+
+<style>
+
+    .btn{
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .btn:hover{
+        transform:scale(1.05);
+    }
+
+</style>
